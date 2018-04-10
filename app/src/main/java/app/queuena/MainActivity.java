@@ -69,25 +69,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login(String email, String password) {
-        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
-        String type = "login";
+        //BackgroundWorker backgroundWorker = new BackgroundWorker(this);
+        //String type = "login";
 
-        backgroundWorker.execute(type, email, password);
+        //backgroundWorker.execute(type, email, password);
 
 
-    }
-
-    private class SendLogin extends AsyncTask<Void, Void, Void> {
-        Context context;
-
-        SendLogin (Context ctx) {
-            context = ctx;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
     }
 
     /*
