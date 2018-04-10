@@ -1,7 +1,9 @@
 package app.queuena;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,12 +21,15 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText email;
-    private EditText password;
-    private TextView register;
-    private Button submit;
+    private EditText emailET;
+    private EditText passwordET;
+    private TextView registerTV;
+    private Button submitBtn;
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
+
+    // database info
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        email = findViewById(R.id.etEmail);
-        password = findViewById(R.id.etPassword);
-        register = findViewById(R.id.tvRegister);
-        submit = findViewById(R.id.btnSubmit);
+        emailET = findViewById(R.id.etEmail);
+        passwordET = findViewById(R.id.etPassword);
+        registerTV = findViewById(R.id.tvRegister);
+        submitBtn = findViewById(R.id.btnSubmit);
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
         progressDialog = new ProgressDialog(this);
@@ -47,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(goToClasses);
         }
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validate(email.getText().toString(), password.getText().toString());
+                login(emailET.getText().toString(), passwordET.getText().toString());
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
+        registerTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent goToReg = new Intent(MainActivity.this, RegistrationActivity.class);
@@ -63,6 +68,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void login(String email, String password) {
+        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
+        String type = "login";
+
+        backgroundWorker.execute(type, email, password);
+
+
+    }
+
+    private class SendLogin extends AsyncTask<Void, Void, Void> {
+        Context context;
+
+        SendLogin (Context ctx) {
+            context = ctx;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+    }
+
+    /*
     private void validate(String userEmail, String userPassword) {
 
         progressDialog.setMessage("Logging in, please wait.");
@@ -83,7 +111,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    */
 
+    /*
     private void checkEmailVerification() {
         FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
         Boolean emailFlag = user.isEmailVerified();
@@ -98,4 +128,5 @@ public class MainActivity extends AppCompatActivity {
             firebaseAuth.signOut();
         }
     }
+    */
 }
