@@ -13,28 +13,25 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText name;
     private EditText email;
     private EditText password;
+    private EditText confirmPassword;
     private Button submit;
     private TextView signin;
-    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
         name = findViewById(R.id.etName);
         email = findViewById(R.id.etEmail);
         password = findViewById(R.id.etPassword);
+        confirmPassword = findViewById(R.id.etConfirmPassword);
         submit = findViewById(R.id.btnSubmit);
         signin = findViewById(R.id.tvSignin);
 
@@ -43,7 +40,17 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String user_email = email.getText().toString().trim();
                 String user_password = password.getText().toString().trim();
+                String confirm_password = confirmPassword.getText().toString().trim();
 
+                if(!validate(user_email, user_password, confirm_password)) {
+                    //Toast.makeText(RegistrationActivity.this, "Error registering", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(RegistrationActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
+                    Intent goToLogin = new Intent(RegistrationActivity.this, MainActivity.class);
+                    startActivity(goToLogin);
+                }
+                /*
                 firebaseAuth.createUserWithEmailAndPassword(user_email, user_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -58,6 +65,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
+                */
             }
         });
 
@@ -68,5 +76,21 @@ public class RegistrationActivity extends AppCompatActivity {
                 startActivity(goToLogin);
             }
         });
+    }
+
+    private Boolean validate(String email, String password, String confirmPassword) {
+        Boolean flag;
+        flag = true;
+
+        if(email.indexOf('@') == -1  || email.indexOf('.') == -1) {
+            flag = false;
+            Toast.makeText(RegistrationActivity.this, "Invalid email", Toast.LENGTH_SHORT).show();
+        }
+        else if(!password.equals(confirmPassword)) {
+            flag = false;
+            Toast.makeText(RegistrationActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+        }
+
+        return flag;
     }
 }
