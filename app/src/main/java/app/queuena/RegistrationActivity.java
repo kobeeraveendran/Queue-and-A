@@ -38,11 +38,12 @@ public class RegistrationActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String user_name = name.getText().toString().trim();
                 String user_email = email.getText().toString().trim();
                 String user_password = password.getText().toString().trim();
                 String confirm_password = confirmPassword.getText().toString().trim();
 
-                if(!validate(user_email, user_password, confirm_password)) {
+                if(!validate(user_name, user_email, user_password, confirm_password)) {
                     //Toast.makeText(RegistrationActivity.this, "Error registering", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -78,11 +79,15 @@ public class RegistrationActivity extends AppCompatActivity {
         });
     }
 
-    private Boolean validate(String email, String password, String confirmPassword) {
+    private Boolean validate(String name, String email, String password, String confirmPassword) {
         Boolean flag;
         flag = true;
 
-        if(email.indexOf('@') == -1  || email.indexOf('.') == -1) {
+        if(name.equals("") || email.equals("") || password.equals("") || confirmPassword.equals("")) {
+            flag = false;
+            Toast.makeText(RegistrationActivity.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
+        }
+        else if(email.indexOf('@') == -1  || email.indexOf('.') == -1) {
             flag = false;
             Toast.makeText(RegistrationActivity.this, "Invalid email", Toast.LENGTH_SHORT).show();
         }
