@@ -83,7 +83,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            System.out.println(response.toString());
+                            VolleyLog.e("Response: ", response.toString());
                         }
                     }, new Response.ErrorListener() {
                         @Override
@@ -98,22 +98,6 @@ public class RegistrationActivity extends AppCompatActivity {
                     Intent goToLogin = new Intent(RegistrationActivity.this, MainActivity.class);
                     startActivity(goToLogin);
                 }
-                /*
-                firebaseAuth.createUserWithEmailAndPassword(user_email, user_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            Toast.makeText(RegistrationActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
-
-                            Intent goToLogin = new Intent(RegistrationActivity.this, MainActivity.class);
-                            startActivity(goToLogin);
-                        }
-                        else {
-                            Toast.makeText(RegistrationActivity.this, "Registration unsuccessful", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                */
             }
         });
 
