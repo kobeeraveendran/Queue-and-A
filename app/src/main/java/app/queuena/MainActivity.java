@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                String email = emailET.getText().toString();
+                String email = emailET.getText().toString().replaceAll("\\s+", "");
                 String password = passwordET.getText().toString();
 
                 if(!validate(email, password)) {
