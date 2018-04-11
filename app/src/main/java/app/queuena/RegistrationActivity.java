@@ -1,8 +1,10 @@
 package app.queuena;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +13,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -22,6 +38,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText confirmPassword;
     private Button submit;
     private TextView signin;
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
         confirmPassword = findViewById(R.id.etConfirmPassword);
         submit = findViewById(R.id.btnSubmit);
         signin = findViewById(R.id.tvSignin);
+        builder = new AlertDialog.Builder(RegistrationActivity.this);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,9 +62,38 @@ public class RegistrationActivity extends AppCompatActivity {
                 String confirm_password = confirmPassword.getText().toString().trim();
 
                 if(!validate(user_name, user_email, user_password, confirm_password)) {
-                    //Toast.makeText(RegistrationActivity.this, "Error registering", Toast.LENGTH_SHORT).show();
+                    password.setText("");
+                    confirmPassword.setText("");
                 }
                 else {
+
+                    String url = "http://cop4331-2.com/API/AddStudent.php";
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(RegistrationActivity.this);
+
+                    JSONObject payload = new JSONObject();
+                    try {
+                        payload.put("email", user_email);
+                        payload.put("name", user_name);
+                        payload.put("password", user_password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            System.out.println(response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            VolleyLog.e("Error ", error.getMessage());
+                        }
+                    });
+
+                    requestQueue.add(jsonRequest);
+
                     Toast.makeText(RegistrationActivity.this, "Registration successful", Toast.LENGTH_SHORT).show();
                     Intent goToLogin = new Intent(RegistrationActivity.this, MainActivity.class);
                     startActivity(goToLogin);
