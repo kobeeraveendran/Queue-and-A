@@ -13,18 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,13 +67,67 @@ public class MainActivity extends AppCompatActivity {
         }
 */
         submitBtn.setOnClickListener(new View.OnClickListener() {
-            String loginresult;
+
+
+            String session = "";
+            String errorMsg = "";
 
             @Override
             public void onClick(View v) {
-                validate(emailET.getText().toString(), passwordET.getText().toString());
-                //loginresult = POST(emailET.getText().toString(), passwordET.getText().toString());
-                login(emailET.getText().toString(), passwordET.getText().toString());
+                String email = emailET.getText().toString().replaceAll("\\s+", "");
+                String password = passwordET.getText().toString();
+
+                if(!validate(email, password)) {
+                    passwordET.setText("");
+                }
+                else {
+                    String url = "http://cop4331-2.com/API/StudentLogin.php";
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+
+                    JSONObject payload = new JSONObject();
+
+                    try {
+                        payload.put("email", email);
+                        payload.put("password", password);
+                    } catch(JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.w("JSON PAYLOAD", payload.toString());
+
+                    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                session = response.getString("session");
+                                Log.w("SESSION", session);
+                                errorMsg = response.getString("error");
+                                Log.w("ERROR", errorMsg);
+
+                                if(errorMsg.equals("Could not find account") || session.equals("")) {
+                                    Toast.makeText(MainActivity.this, "Username/Password incorrect", Toast.LENGTH_SHORT).show();
+                                    passwordET.setText("");
+                                }
+                                else if(!session.equals("") && errorMsg.equals("")) {
+                                    Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    Intent goToCourses = new Intent(MainActivity.this, CourseActivity.class);
+                                    goToCourses.putExtra("PHP_SESSION", session);
+                                    startActivity(goToCourses);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            VolleyLog.e("Error ", error.getMessage());
+                        }
+                    });
+
+                    requestQueue.add(jsonRequest);
+                }
             }
         });
 
@@ -106,50 +156,7 @@ public class MainActivity extends AppCompatActivity {
         return flag;
     }
 
-    /*
-    // VERSION 1 (UNTESTED)
-    public static String POST (String email, String password) {
-        InputStream inputStream = null;
-        String result = "";
 
-        try {
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://cop4331-2.com/API/StudentLogin.php");
-
-            String jsonpayload = "";
-
-            JSONObject jsonobject = new JSONObject();
-            jsonobject.put("email", email);
-            jsonobject.put("password", password);
-
-            jsonpayload = jsonobject.toString();
-
-            StringEntity se = new StringEntity(jsonpayload);
-
-            httpPost.setEntity(se);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-
-            HttpResponse httpResponse = httpClient.execute(httpPost);
-
-            inputStream = httpResponse.getEntity().getContent();
-
-            if(inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-            }
-            else {
-                result = "Failed";
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -162,119 +169,4 @@ public class MainActivity extends AppCompatActivity {
         inputStream.close();
         return result;
     }
-    */
-    // VERSION 2 (UNTESTED)
-
-    public void login(String email, String password) {
-        JSONObject postData = new JSONObject();
-        Background b = new Background();
-
-        try {
-            postData.put("email", email);
-            postData.put("password", password);
-
-            b.execute(postData.toString());
-        } catch(JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public class Background extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            String data = "";
-
-            HttpURLConnection httpURLConnection = null;
-
-            try {
-                URL url = new URL("http://cop4331-2.com/API/StudentLogin.php");
-
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.connect();
-
-                int response = httpURLConnection.getResponseCode();
-
-                DataOutputStream os = new DataOutputStream(httpURLConnection.getOutputStream());
-                os.writeBytes("PostData=" + params[0]);
-                os.flush();
-                os.close();
-
-                InputStream is = httpURLConnection.getInputStream();
-                InputStreamReader isReader = new InputStreamReader(is);
-
-                int inputStreamData = isReader.read();
-
-                while(inputStreamData != -1) {
-                    char current = (char) inputStreamData;
-                    inputStreamData = isReader.read();
-                    data += current;
-                }
-                is.close();
-
-            } catch(MalformedURLException e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            } catch(IOException e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-            finally {
-                if(httpURLConnection != null) {
-                    httpURLConnection.disconnect();
-                }
-            }
-
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.e("TAG", result);
-        }
-    }
-
-
-    /*
-    private void validate(String userEmail, String userPassword) {
-
-        progressDialog.setMessage("Logging in, please wait.");
-        progressDialog.show();
-
-        firebaseAuth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                progressDialog.dismiss();
-                if(task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    Intent goToCourses = new Intent(MainActivity.this, CourseActivity.class);
-                    startActivity(goToCourses);
-                }
-                else {
-                    Toast.makeText(MainActivity.this,"Username/password incorrect", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-    */
-
-    /*
-    private void checkEmailVerification() {
-        FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
-        Boolean emailFlag = user.isEmailVerified();
-
-        if(emailFlag) {
-            finish();
-            Intent goToCourses = new Intent(MainActivity.this, CourseActivity.class);
-            startActivity(goToCourses);
-        }
-        else {
-            Toast.makeText(this, "Please verify your email", Toast.LENGTH_SHORT).show();
-            firebaseAuth.signOut();
-        }
-    }
-    */
 }
