@@ -2,13 +2,25 @@ package app.queuena;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class CourseActivity extends AppCompatActivity {
 
-    private String[] course_list;
+    private ArrayList<String[]> courseList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +29,6 @@ public class CourseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course);
 
         String session = getIntent().getStringExtra("PHP_SESSION");
-        String[] class_list;
 
 
 
@@ -43,12 +54,18 @@ public class CourseActivity extends AppCompatActivity {
                     result = response.getString("result");
                     error = response.getString("error");
 
+                    Log.w("RESULTYRES", result);
+
                     if(error.equals("No classes found") || result.equals("")) {
                         Toast.makeText(CourseActivity.this, "No classes found", Toast.LENGTH_SHORT).show();
                     }
                     else if(!result.equals("") && error.equals("")) {
                         Toast.makeText(CourseActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        course_list = displayClasses(result);
+                        courseList = displayClasses(result);
+
+                        for(int i = 0; i < courseList.size(); i++) {
+                            Log.w("COURSE_LIST", courseList.get(i)[1]);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -62,19 +79,22 @@ public class CourseActivity extends AppCompatActivity {
         });
 
         requestQueue.add(jsonRequest);
+    }
+
+    public ArrayList<String[]> displayClasses(String results){
+        ArrayList<String[]> tempList = new ArrayList<>();
+        String noPipes[] = results.trim().split("\\|");
+        Log.w("PIPEYPIPE", noPipes[1]);
+        //Log.w("PIPEYPIPEV2", noPipes[3]);
+
+        for(int i=0; i<noPipes.length; i++ ){
+            String temp[];
+            temp = noPipes[i].split(":");
+            Log.w("TEMPYTEMP", temp.length + "");
+            Log.w("TEMPYVALUE", temp[0]);
+            tempList.add(temp);
         }
 
-        public String [] displayClasses(String results){
-            String[] noPipes = results.split("|");
-            String[] finale = {};
-            for(int i=0; i<noPipes.length; i++ ){
-                finale.concat(noPipes[i].split(":"));
-            }
-            for(int i=0; i<finale.length; i++ ){
-                if(i%2!=0)
-                    finale[i].trim();
-            }
-
-            return finale;
-        }
+        return tempList;
+    }
 }
