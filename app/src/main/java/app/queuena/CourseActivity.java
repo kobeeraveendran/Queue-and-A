@@ -3,6 +3,9 @@ package app.queuena;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -20,7 +23,9 @@ import java.util.ArrayList;
 
 public class CourseActivity extends AppCompatActivity {
 
-    private ArrayList<String[]> courseList = new ArrayList<>();
+    private ArrayList<String[]> courseListWithID = new ArrayList<>();
+    private ArrayList<String> courseList = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +66,14 @@ public class CourseActivity extends AppCompatActivity {
                     }
                     else if(!result.equals("") && error.equals("")) {
                         Toast.makeText(CourseActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        courseList = displayClasses(result);
+                        courseListWithID = displayClasses(result);
 
-                        for(int i = 0; i < courseList.size(); i++) {
-                            Log.w("COURSE_LIST", courseList.get(i)[1]);
+                        for(int i = 0; i < courseListWithID.size(); i++) {
+                            Log.w("COURSE_LIST", courseListWithID.get(i)[1]);
+                            courseList.add(courseListWithID.get(i)[1]);
                         }
+
+                        populateListView(courseList);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -97,4 +105,20 @@ public class CourseActivity extends AppCompatActivity {
 
         return tempList;
     }
+
+    private void populateListView(ArrayList<String> classList) {
+        // list of items
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, classList);
+
+        // configure listview
+        ListView list = (ListView) findViewById(R.id.lvClasses);
+        list.setAdapter(adapter);
+    }
+
+    private void addItems(String courseName) {
+        courseList.add(courseName);
+        adapter.notifyDataSetChanged();
+    }
+
+
 }
