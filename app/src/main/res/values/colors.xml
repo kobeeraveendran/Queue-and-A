@@ -3,5 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name = "colorDark">#000000</color>
+    <color name = "colorDark">#202225</color>
+    <color name="colorBackground">#36393e</color>
+    <color name="text_color">#fffff3</color>
+    <color name="faded_text_color">#e0e0d7</color>
 </resources>

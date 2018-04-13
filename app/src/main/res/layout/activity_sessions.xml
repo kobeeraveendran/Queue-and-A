@@ -18,7 +18,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="casual"
         android:text="Active Sessions"
-        android:textColor="#000000"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +49,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawSelectorOnTop="true" />
+
+        <TextView
+            android:id="@+id/tvEmptyActive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No sessions to display"
+            android:textColor="@color/text_color"
+            android:textSize="24sp"
+            android:gravity="center"/>
     </FrameLayout>
 
     <TextView
@@ -63,7 +72,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="casual"
         android:text="Archived Sessions"
-        android:textColor="#000000"
+        android:textColor="@color/text_color"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +102,15 @@
             android:id="@+id/lvArchived"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tvEmptyArchived"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="No sessions to display"
+            android:textColor="@color/text_color"
+            android:textSize="24sp"
+            android:gravity="center"/>
     </FrameLayout>
 
 

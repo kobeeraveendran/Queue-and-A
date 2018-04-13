@@ -109,10 +109,11 @@ public class CourseActivity extends AppCompatActivity {
 
     private void populateListView(ArrayList<String> classList) {
         // list of items
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, classList);
+        adapter = new ArrayAdapter<String>(this, R.layout.listrow, R.id.tvItem, classList);
 
         // configure listview
         ListView list = findViewById(R.id.lvClasses);
+        list.setEmptyView(findViewById(R.id.tvEmptyClasses));
         list.setAdapter(adapter);
 
         // for moving to the selected class

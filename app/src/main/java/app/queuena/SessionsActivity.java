@@ -104,35 +104,33 @@ public class SessionsActivity extends AppCompatActivity {
     private void populateActiveList(ArrayList<String[]> activeList) {
         ArrayList<String> sessionNameList = new ArrayList<>();
         Log.w("ACTIVE LIST SIZE", Integer.toString(activeList.get(0).length));
-        if(activeList.get(0).length < 2) {
-            sessionNameList.add("Nothing to see here");
-        }
-        else {
+
+        if(activeList.get(0).length >= 2) {
             for( int i = 0; i < activeList.size(); i++ ) {
                 sessionNameList.add(activeList.get(i)[1]);
             }
         }
 
-        activeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sessionNameList);
+        activeAdapter = new ArrayAdapter<>(this, R.layout.listrow, R.id.tvItem, sessionNameList);
 
         ListView activeListView = findViewById(R.id.lvActive);
+        activeListView.setEmptyView(findViewById(R.id.tvEmptyActive));
         activeListView.setAdapter(activeAdapter);
     }
 
     private void populateArchivedList(ArrayList<String[]> archivedList) {
         ArrayList<String> sessionNameList = new ArrayList<>();
-        if(archivedList.get(0).length < 2) {
-            sessionNameList.add("Nothing to see here");
-        }
-        else {
+
+        if(archivedList.get(0).length >= 2) {
             for( int i = 0; i < archivedList.size(); i++ ) {
                 sessionNameList.add(archivedList.get(i)[1]);
             }
         }
 
-        archivedAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, sessionNameList);
+        archivedAdapter = new ArrayAdapter<>(this, R.layout.listrow, R.id.tvItem, sessionNameList);
 
         ListView archivedListVIew = findViewById(R.id.lvArchived);
+        archivedListVIew.setEmptyView(findViewById(R.id.tvEmptyArchived));
         archivedListVIew.setAdapter(archivedAdapter);
     }
 
