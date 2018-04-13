@@ -1,9 +1,11 @@
 package app.queuena;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,16 +28,15 @@ public class CourseActivity extends AppCompatActivity {
     private ArrayList<String[]> courseListWithID = new ArrayList<>();
     private ArrayList<String> courseList = new ArrayList<>();
     private ArrayAdapter<String> adapter;
+    private String session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_course);
 
-        String session = getIntent().getStringExtra("PHP_SESSION");
-
-
+        String sessionLocal = getIntent().getStringExtra("PHP_SESSION");
+        session = sessionLocal;
 
         String url = "http://cop4331-2.com/API/GetStudentClass.php";
         RequestQueue requestQueue = Volley.newRequestQueue(CourseActivity.this);
@@ -54,8 +55,8 @@ public class CourseActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    String result = "";
-                    String error = "";
+                    String result;
+                    String error;
                     result = response.getString("result");
                     error = response.getString("error");
 
@@ -111,14 +112,47 @@ public class CourseActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, classList);
 
         // configure listview
-        ListView list = (ListView) findViewById(R.id.lvClasses);
+        ListView list = findViewById(R.id.lvClasses);
         list.setAdapter(adapter);
+
+        // for moving to the selected class
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String url = "http://cop4331-2.com/API/SetClassID.php";
+                RequestQueue requestQueue = Volley.newRequestQueue(CourseActivity.this);
+                String classPosition = courseListWithID.get(position)[0];
+                JSONObject payload = new JSONObject();
+
+                try {
+                    payload.put("session", session);
+                    payload.put("classID", classPosition);
+                } catch(JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String error = response.getString("error");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.e("Error: ", error.getMessage());
+                    }
+                });
+
+                requestQueue.add(jsonRequest);
+
+                Intent goToSessions = new Intent(CourseActivity.this, SessionsActivity.class);
+                goToSessions.putExtra("PHP_SESSION", session);
+                startActivity(goToSessions);
+            }
+        });
     }
-
-    private void addItems(String courseName) {
-        courseList.add(courseName);
-        adapter.notifyDataSetChanged();
-    }
-
-
 }

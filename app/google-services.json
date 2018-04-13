@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "107300580110",
+    "firebase_url": "https://queue-and-a.firebaseio.com",
+    "project_id": "queue-and-a",
+    "storage_bucket": "queue-and-a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107300580110:android:2ab1e6304979fe66",
+        "android_client_info": {
+          "package_name": "app.queuena"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107300580110-rbpktr2k1n8p385lntvr3bf8uq0cinjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARBPHRQ7KWie9qcdgLPZA9AFWc7IjyGrY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
