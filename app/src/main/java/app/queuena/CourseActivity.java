@@ -74,7 +74,7 @@ public class CourseActivity extends AppCompatActivity {
                         Toast.makeText(CourseActivity.this, "No classes found", Toast.LENGTH_SHORT).show();
                     }
                     else if(!result.equals("") && error.equals("")) {
-                        Toast.makeText(CourseActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(CourseActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         courseListWithID = displayClasses(result);
 
                         for(int i = 0; i < courseListWithID.size(); i++) {
@@ -99,7 +99,6 @@ public class CourseActivity extends AppCompatActivity {
 
         // adding class to list
         addClass = findViewById(R.id.btnAddClass);
-
 
         addClass.setOnClickListener(new View.OnClickListener() {
             @Override
