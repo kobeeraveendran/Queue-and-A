@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".CourseActivity" />
-        <activity android:name=".SessionsActivity"></activity>
+        <activity android:name=".SessionsActivity" />
+        <activity android:name=".MessageActivity"></activity>
     </application>
 
 </manifest>
