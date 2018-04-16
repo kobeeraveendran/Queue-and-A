@@ -128,6 +128,9 @@ public class CourseActivity extends AppCompatActivity {
                         dialog.cancel();
                         String newClassID = classID.getText().toString();
 
+                        int hexToDec = Integer.parseInt(newClassID, 16);
+                        newClassID = Integer.toString(hexToDec);
+
                         JSONObject payload = new JSONObject();
                         String url = "http://cop4331-2.com/API/JoinClass.php";
 
