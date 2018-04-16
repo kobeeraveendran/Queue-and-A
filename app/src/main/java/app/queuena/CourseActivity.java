@@ -1,13 +1,20 @@
 package app.queuena;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,6 +36,7 @@ public class CourseActivity extends AppCompatActivity {
     private ArrayList<String> courseList = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private String session;
+    private ImageButton addClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +47,7 @@ public class CourseActivity extends AppCompatActivity {
         session = sessionLocal;
 
         String url = "http://cop4331-2.com/API/GetStudentClass.php";
-        RequestQueue requestQueue = Volley.newRequestQueue(CourseActivity.this);
+        final RequestQueue requestQueue = Volley.newRequestQueue(CourseActivity.this);
 
         JSONObject session_info = new JSONObject();
 
@@ -88,6 +96,96 @@ public class CourseActivity extends AppCompatActivity {
         });
 
         requestQueue.add(jsonRequest);
+
+        // adding class to list
+        addClass = findViewById(R.id.btnAddClass);
+
+
+        addClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(CourseActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_addclass, null);
+
+                alertBuilder.setCancelable(true);
+                alertBuilder.setView(mView);
+
+                //alertBuilder.setMessage("Enter the class ID provided by your professor below");
+                //alertBuilder.setTitle("Join A Class");
+
+
+                final EditText classID = mView.findViewById(R.id.etAddClassID);
+                Button addOption = mView.findViewById(R.id.btnAdd);
+                //Button cancelOption = mView.findViewById(R.id.btnCancel);
+
+                final AlertDialog dialog = alertBuilder.create();
+
+                // positive button
+                addOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                        String newClassID = classID.getText().toString();
+
+                        JSONObject payload = new JSONObject();
+                        String url = "http://cop4331-2.com/API/JoinClass.php";
+
+                        RequestQueue requestQueue1 = Volley.newRequestQueue(CourseActivity.this);
+
+                        try {
+                            payload.put("session", session);
+                            payload.put("classID", newClassID);
+                        } catch(JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    String error;
+
+                                    error = response.getString("error");
+
+                                    if (error.equals("You have been banned from joining this class. See your professor for details.")) {
+                                        Toast.makeText(CourseActivity.this, "User banned from joining class", Toast.LENGTH_SHORT).show();
+                                    } else if (error.equals("Invalid student id")) {
+                                        Toast.makeText(CourseActivity.this, "Invalid student ID", Toast.LENGTH_SHORT).show();
+                                    } else if (error.equals("Invalid class id")) {
+                                        Toast.makeText(CourseActivity.this, "Invalid class ID", Toast.LENGTH_SHORT).show();
+                                    } else if (error.equals("You are already in this class.")) {
+                                        Toast.makeText(CourseActivity.this, "You are already in this class", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        // reload the courses listview
+                                        CourseActivity.this.recreate();
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                VolleyLog.e("Error ", error.getMessage());
+                            }
+                        });
+
+                        requestQueue1.add(jsonRequest);
+                    }
+                });
+                /*
+                // negative button
+                cancelOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                */
+                dialog.show();
+            }
+        });
     }
 
     public ArrayList<String[]> displayClasses(String results){
