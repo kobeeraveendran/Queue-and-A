@@ -193,14 +193,12 @@ public class CourseActivity extends AppCompatActivity {
     public ArrayList<String[]> displayClasses(String results){
         ArrayList<String[]> tempList = new ArrayList<>();
         String noPipes[] = results.trim().split("\\|");
-        Log.w("PIPEYPIPE", noPipes[1]);
-        //Log.w("PIPEYPIPEV2", noPipes[3]);
 
         for(int i=0; i<noPipes.length; i++ ){
             String temp[];
             temp = noPipes[i].split(":");
-            Log.w("TEMPYTEMP", temp.length + "");
-            Log.w("TEMPYVALUE", temp[0]);
+            //Log.w("TEMPYTEMP", temp.length + "");
+            //Log.w("TEMPYVALUE", temp[0]);
             tempList.add(temp);
         }
 
