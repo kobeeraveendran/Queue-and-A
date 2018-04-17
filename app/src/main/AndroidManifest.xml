@@ -21,7 +21,8 @@
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".CourseActivity" />
         <activity android:name=".SessionsActivity" />
-        <activity android:name=".MessageActivity"></activity>
+        <activity android:name=".MessageActivity"
+            android:windowSoftInputMode="adjustPan"></activity>
     </application>
 
 </manifest>
