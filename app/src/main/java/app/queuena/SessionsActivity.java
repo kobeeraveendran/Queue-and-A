@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -16,11 +17,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class SessionsActivity extends AppCompatActivity {
 
@@ -30,7 +41,9 @@ public class SessionsActivity extends AppCompatActivity {
     private ArrayAdapter<String> activeAdapter;
     private ArrayAdapter<String> archivedAdapter;
     private String session;
+    private boolean emptyFlag = true;
 
+    private DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +138,40 @@ public class SessionsActivity extends AppCompatActivity {
         activeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(emptyFlag) {
+                    isEmptyQ();
+                }
+
+                // check if first question
+                // create firebase child
+                if(emptyFlag) {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(activeSessions.get(position)[0], "");
+                    root.updateChildren(map);
+
+                    emptyFlag = false;
+
+                    /*
+                    root.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            Set<String> set = new HashSet<String>();
+                            Iterator i = dataSnapshot.getChildren().iterator();
+
+                            while (i.hasNext()) {
+                                set.add(((DataSnapshot) i.next()).getKey());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    */
+                }
+
                 Intent goToQuestions = new Intent(SessionsActivity.this, MessageActivity.class);
                 sessionGlobal.add(activeSessions.get(position)[0]);
                 goToQuestions.putExtra("SESSION_INFO", sessionGlobal);
@@ -156,6 +203,52 @@ public class SessionsActivity extends AppCompatActivity {
                 startActivity(goToQuestions);
             }
         });
+    }
+
+    private void isEmptyQ(){
+        // no questions
+
+        String url = "http://cop4331-2.com/API/ListQuestions.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(SessionsActivity.this);
+
+        JSONObject session_info = new JSONObject();
+
+        try {
+            session_info.put("session", sessionGlobal.get(2));
+            session_info.put("showRead", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.w("SESSION INFO", session_info.toString());
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, session_info, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String result;
+                    String error;
+                    result = response.getString("result");
+                    error = response.getString("error");
+
+                    if(!error.equals("") || result.equals("")) {
+                        Toast.makeText(SessionsActivity.this, "No questions found.", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(!result.equals("") && error.equals("")) {
+                        emptyFlag = false;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error ", error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonRequest);
     }
 
 }

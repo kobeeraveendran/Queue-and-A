@@ -23,11 +23,24 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.372">
 
-        <ListView
-            android:id="@+id/lvQuestionList"
+        <ScrollView
+            android:id="@+id/svQuestions"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@color/text_color" />
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/llScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+            </LinearLayout>
+        </ScrollView>
     </FrameLayout>
 
     <EditText
