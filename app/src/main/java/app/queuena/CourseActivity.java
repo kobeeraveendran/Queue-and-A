@@ -306,6 +306,9 @@ public class CourseActivity extends AppCompatActivity {
                     }
                 });
 
+                final AlertDialog dialog = builder.create();
+
+                dialog.show();
 
                 return true;
             }
