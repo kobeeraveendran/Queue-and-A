@@ -34,6 +34,7 @@ public class CourseActivity extends AppCompatActivity {
 
     private ArrayList<String[]> courseListWithID = new ArrayList<>();
     private ArrayList<String> courseList = new ArrayList<>();
+    private ArrayList<String> sessionGlobal;
     private ArrayAdapter<String> adapter;
     private String session;
     private ImageButton addClass;
@@ -45,8 +46,9 @@ public class CourseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
 
-        String sessionLocal = getIntent().getStringExtra("PHP_SESSION");
-        session = sessionLocal;
+        ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
+        session = sessionLocal.get(2);
+        sessionGlobal = sessionLocal;
 
         String url = "http://cop4331-2.com/API/GetStudentClass.php";
         final RequestQueue requestQueue = Volley.newRequestQueue(CourseActivity.this);
@@ -69,8 +71,6 @@ public class CourseActivity extends AppCompatActivity {
                     String error;
                     result = response.getString("result");
                     error = response.getString("error");
-
-                    Log.w("RESULTYRES", result);
 
                     if(error.equals("No classes found") || result.equals("")) {
                         Toast.makeText(CourseActivity.this, "No classes found", Toast.LENGTH_SHORT).show();
@@ -176,15 +176,7 @@ public class CourseActivity extends AppCompatActivity {
                         requestQueue1.add(jsonRequest);
                     }
                 });
-                /*
-                // negative button
-                cancelOption.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                */
+
                 dialog.show();
             }
         });
@@ -197,8 +189,6 @@ public class CourseActivity extends AppCompatActivity {
         for(int i=0; i<noPipes.length; i++ ){
             String temp[];
             temp = noPipes[i].split(":");
-            //Log.w("TEMPYTEMP", temp.length + "");
-            //Log.w("TEMPYVALUE", temp[0]);
             tempList.add(temp);
         }
 
@@ -250,7 +240,8 @@ public class CourseActivity extends AppCompatActivity {
                 requestQueue.add(jsonRequest);
 
                 Intent goToSessions = new Intent(CourseActivity.this, SessionsActivity.class);
-                goToSessions.putExtra("PHP_SESSION", session);
+
+                goToSessions.putExtra("SESSION_INFO", sessionGlobal);
                 startActivity(goToSessions);
             }
         });

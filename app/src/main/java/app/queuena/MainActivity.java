@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                String email = emailET.getText().toString().replaceAll("\\s", "");
-                String password = passwordET.getText().toString();
+                final String email = emailET.getText().toString().replaceAll("\\s", "");
+                final String password = passwordET.getText().toString();
 
                 if(!validate(email, password)) {
                     passwordET.setText("");
@@ -115,7 +115,11 @@ public class MainActivity extends AppCompatActivity {
                                 else if(!session.equals("") && errorMsg.equals("")) {
                                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                                     Intent goToCourses = new Intent(MainActivity.this, CourseActivity.class);
-                                    goToCourses.putExtra("PHP_SESSION", session);
+                                    ArrayList<String> info = new ArrayList<>();
+                                    info.add(email);
+                                    info.add(password);
+                                    info.add(session);
+                                    goToCourses.putExtra("SESSION_INFO", info);
                                     startActivity(goToCourses);
                                 }
                             } catch (JSONException e) {

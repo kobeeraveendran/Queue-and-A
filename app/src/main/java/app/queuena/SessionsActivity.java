@@ -26,6 +26,7 @@ public class SessionsActivity extends AppCompatActivity {
 
     private ArrayList<String[]> activeSessions = new ArrayList<>();
     private ArrayList<String[]> archivedSessions = new ArrayList<>();
+    private ArrayList<String> sessionGlobal;
     private ArrayAdapter<String> activeAdapter;
     private ArrayAdapter<String> archivedAdapter;
     private String session;
@@ -36,8 +37,9 @@ public class SessionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions);
 
-        String sessionLocal = getIntent().getStringExtra("PHP_SESSION");
-        session = sessionLocal;
+        ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
+        session = sessionLocal.get(2);
+        sessionGlobal = sessionLocal;
 
         String url = "http://cop4331-2.com/API/GetSession.php";
         RequestQueue requestQueue = Volley.newRequestQueue(SessionsActivity.this);
@@ -104,7 +106,7 @@ public class SessionsActivity extends AppCompatActivity {
         return tempList;
     }
 
-    private void populateActiveList(ArrayList<String[]> activeList) {
+    private void populateActiveList(final ArrayList<String[]> activeList) {
         ArrayList<String> sessionNameList = new ArrayList<>();
         Log.w("ACTIVE LIST SIZE", Integer.toString(activeList.get(0).length));
 
@@ -119,6 +121,16 @@ public class SessionsActivity extends AppCompatActivity {
         ListView activeListView = findViewById(R.id.lvActive);
         activeListView.setEmptyView(findViewById(R.id.tvEmptyActive));
         activeListView.setAdapter(activeAdapter);
+
+        activeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent goToQuestions = new Intent(SessionsActivity.this, MessageActivity.class);
+                sessionGlobal.add(activeSessions.get(position)[0]);
+                goToQuestions.putExtra("SESSION_INFO", sessionGlobal);
+                startActivity(goToQuestions);
+            }
+        });
     }
 
     private void populateArchivedList(ArrayList<String[]> archivedList) {
@@ -140,6 +152,7 @@ public class SessionsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent goToQuestions = new Intent(SessionsActivity.this, MessageActivity.class);
+                // send info in intent
                 startActivity(goToQuestions);
             }
         });
