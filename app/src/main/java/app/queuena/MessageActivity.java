@@ -1,5 +1,6 @@
 package app.queuena;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,7 +74,7 @@ public class MessageActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
+
                 Map<String, Object> map = new HashMap<>();
                 tempKey = root.push().getKey();
 
@@ -84,13 +85,14 @@ public class MessageActivity extends AppCompatActivity {
                 map2.put("msg", questionText.getText().toString());
 
                 message_root.updateChildren(map2);
-                */
 
+                sessionIDFix();
                 askQuestion(questionText.getText().toString());
+                questionText.setText("");
             }
         });
 
-        /*
+
         root.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -117,7 +119,7 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
-        */
+
     }
 
     private String chat_msg;
@@ -131,6 +133,46 @@ public class MessageActivity extends AppCompatActivity {
         }
     }
 
+    private void sessionIDFix(){
+        String url = "http://cop4331-2.com/API/SetSessionID.php";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(MessageActivity.this);
+
+        JSONObject payload = new JSONObject();
+
+
+        try {
+            payload.put("session", sessionGlobal.get(2));
+            payload.put("sessionID", sessionGlobal.get(3));
+            payload.put("sessionName", "");
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String errorMsg = response.getString("error");
+
+                    if(!errorMsg.equals("")) {
+                        Toast.makeText(MessageActivity.this, "set SessionID failure", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error ", error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonRequest);
+    }
+
     private void askQuestion(String text) {
         if(validate(text)) {
             String url = "http://cop4331-2.com/API/AskQuestion.php";
@@ -141,6 +183,7 @@ public class MessageActivity extends AppCompatActivity {
             try {
                 payload.put("session", sessionGlobal.get(2));
                 payload.put("text", text);
+                Log.w("TAG", payload.getString("session")+payload.getString("text"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -151,6 +194,7 @@ public class MessageActivity extends AppCompatActivity {
                     try {
                         String error;
                         error = response.getString("error");
+                        Log.w("TAG", "error : "+ error );
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
