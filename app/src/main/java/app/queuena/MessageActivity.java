@@ -3,6 +3,8 @@ package app.queuena;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -50,6 +52,10 @@ public class MessageActivity extends AppCompatActivity {
     private String tempKey;
     private boolean emptyFlag = true;
 
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerViewAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
     private DatabaseReference root;
 
     @Override
@@ -61,6 +67,10 @@ public class MessageActivity extends AppCompatActivity {
         questionText = findViewById(R.id.etMessageContent);
         chatElement = findViewById(R.id.tvMessage);
         scrollView = findViewById(R.id.svQuestions);
+        recyclerView = findViewById(R.id.rvMessageList);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setAdapter(recyclerViewAdapter);
 
         setTitle("Question Queue");
 

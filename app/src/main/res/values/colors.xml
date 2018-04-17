@@ -7,4 +7,6 @@
     <color name="colorBackground">#36393e</color>
     <color name="text_color">#fffff3</color>
     <color name="faded_text_color">#e0e0d7</color>
+    <color name="self_messages_color">#52d273</color>
+    <color name="other_messages_color">#b3b8bc</color>
 </resources>
