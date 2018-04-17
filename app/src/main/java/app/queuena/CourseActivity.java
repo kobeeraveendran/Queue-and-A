@@ -289,8 +289,10 @@ public class CourseActivity extends AppCompatActivity {
                             public void onResponse(JSONObject response) {
                                 try {
                                     String error = response.getString("error");
+                                    index -= 1;
 
                                     adapter.remove(courseListWithID.get(position)[1]);
+                                    courseListWithID.remove(position);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
