@@ -38,6 +38,8 @@ public class CourseActivity extends AppCompatActivity {
     private String session;
     private ImageButton addClass;
 
+    private int index = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +78,7 @@ public class CourseActivity extends AppCompatActivity {
                     else if(!result.equals("") && error.equals("")) {
                         // Toast.makeText(CourseActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         courseListWithID = displayClasses(result);
+                        index = courseListWithID.size() - 1;
 
                         for(int i = 0; i < courseListWithID.size(); i++) {
                             Log.w("COURSE_LIST", courseListWithID.get(i)[1]);
@@ -109,10 +112,6 @@ public class CourseActivity extends AppCompatActivity {
 
                 alertBuilder.setCancelable(true);
                 alertBuilder.setView(mView);
-
-                //alertBuilder.setMessage("Enter the class ID provided by your professor below");
-                //alertBuilder.setTitle("Join A Class");
-
 
                 final EditText classID = mView.findViewById(R.id.etAddClassID);
                 Button addOption = mView.findViewById(R.id.btnAdd);
@@ -160,7 +159,8 @@ public class CourseActivity extends AppCompatActivity {
                                         Toast.makeText(CourseActivity.this, "You are already in this class", Toast.LENGTH_SHORT).show();
                                     } else {
                                         // reload the courses listview
-                                        CourseActivity.this.recreate();
+
+                                        requeryPHP();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -214,6 +214,7 @@ public class CourseActivity extends AppCompatActivity {
         list.setEmptyView(findViewById(R.id.tvEmptyClasses));
         list.setAdapter(adapter);
 
+
         // for moving to the selected class
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -253,5 +254,109 @@ public class CourseActivity extends AppCompatActivity {
                 startActivity(goToSessions);
             }
         });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(CourseActivity.this);
+                builder.setMessage("Remove selected class?");
+                builder.setCancelable(true);
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String tempID = courseListWithID.get(position)[0];
+
+                        String url = "http://cop4331-2.com/API/LeaveClass.php";
+                        RequestQueue tempRequestQueue = Volley.newRequestQueue(CourseActivity.this);
+
+                        JSONObject payload = new JSONObject();
+
+                        try {
+                            payload.put("session", session);
+                            payload.put("classID", tempID);
+                        } catch(JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    String error = response.getString("error");
+
+                                    adapter.remove(courseListWithID.get(position)[1]);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                VolleyLog.e("Error: ", error.getMessage());
+                            }
+                        });
+
+                        tempRequestQueue.add(jsonRequest);
+                    }
+                });
+
+
+                return true;
+            }
+        });
+    }
+
+    public void requeryPHP() {
+        String url = "http://cop4331-2.com/API/GetStudentClass.php";
+        final RequestQueue requestQueue = Volley.newRequestQueue(CourseActivity.this);
+
+        JSONObject session_info = new JSONObject();
+
+        try {
+            session_info.put("session", session);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.w("SESSION INFO", session_info.toString());
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, session_info, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String result;
+                    String error;
+                    result = response.getString("result");
+                    error = response.getString("error");
+
+                    Log.w("RESULTYRES", result);
+
+                    if(error.equals("No classes found") || result.equals("")) {
+                        Toast.makeText(CourseActivity.this, "No classes found", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(!result.equals("") && error.equals("")) {
+                        courseListWithID = displayClasses(result);
+
+                        adapter.add(courseListWithID.get(index + 1)[1]);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error ", error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonRequest);
     }
 }

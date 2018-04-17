@@ -1,8 +1,11 @@
 package app.queuena;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -132,6 +135,14 @@ public class SessionsActivity extends AppCompatActivity {
         ListView archivedListVIew = findViewById(R.id.lvArchived);
         archivedListVIew.setEmptyView(findViewById(R.id.tvEmptyArchived));
         archivedListVIew.setAdapter(archivedAdapter);
+
+        archivedListVIew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent goToQuestions = new Intent(SessionsActivity.this, QuestionsActivity.class);
+                startActivity(goToQuestions);
+            }
+        });
     }
 
 }
