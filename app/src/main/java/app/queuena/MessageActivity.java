@@ -73,7 +73,7 @@ public class MessageActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+/*
                 Map<String, Object> map = new HashMap<>();
                 tempKey = root.push().getKey();
 
@@ -84,11 +84,13 @@ public class MessageActivity extends AppCompatActivity {
                 map2.put("msg", questionText.getText().toString());
 
                 message_root.updateChildren(map2);
+                */
 
                 askQuestion(questionText.getText().toString());
             }
         });
 
+        /*
         root.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -115,6 +117,7 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+        */
     }
 
     private String chat_msg;
