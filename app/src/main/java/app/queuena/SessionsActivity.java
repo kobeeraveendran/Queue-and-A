@@ -139,7 +139,7 @@ public class SessionsActivity extends AppCompatActivity {
         archivedListVIew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent goToQuestions = new Intent(SessionsActivity.this, QuestionsActivity.class);
+                Intent goToQuestions = new Intent(SessionsActivity.this, MessageActivity.class);
                 startActivity(goToQuestions);
             }
         });

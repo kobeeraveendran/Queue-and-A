@@ -3,7 +3,6 @@
     package="app.queuena">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -22,10 +21,6 @@
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".CourseActivity" />
         <activity android:name=".SessionsActivity" />
-        <activity
-            android:name=".QuestionsActivity"
-            android:label="@string/title_activity_questions"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MessageActivity"></activity>
     </application>
 
