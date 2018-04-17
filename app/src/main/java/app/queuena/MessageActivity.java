@@ -124,7 +124,7 @@ public class MessageActivity extends AppCompatActivity {
 
         while(i.hasNext()) {
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
-            chatElement.append(chat_msg);
+            chatElement.append(chat_msg + "\n");
         }
     }
 
