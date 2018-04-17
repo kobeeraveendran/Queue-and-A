@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ public class SessionsActivity extends AppCompatActivity {
     private ArrayAdapter<String> activeAdapter;
     private ArrayAdapter<String> archivedAdapter;
     private String session;
+    private ImageButton refresh;
     private boolean emptyFlag = true;
 
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference().getRoot();
@@ -49,6 +51,15 @@ public class SessionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sessions);
+
+        refresh = findViewById(R.id.imgbtnRefresh);
+
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SessionsActivity.this.recreate();
+            }
+        });
 
         ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
         session = sessionLocal.get(2);
