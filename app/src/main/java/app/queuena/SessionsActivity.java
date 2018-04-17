@@ -151,7 +151,7 @@ public class SessionsActivity extends AppCompatActivity {
 
                     emptyFlag = false;
 
-                    /*
+
                     root.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -169,7 +169,7 @@ public class SessionsActivity extends AppCompatActivity {
 
                         }
                     });
-                    */
+
                 }
 
                 Intent goToQuestions = new Intent(SessionsActivity.this, MessageActivity.class);
