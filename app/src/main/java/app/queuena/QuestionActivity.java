@@ -83,6 +83,10 @@ public class QuestionActivity extends AppCompatActivity {
                 alertBuilder.setView(mView);
 
                 submitPollButton = findViewById(R.id.btnPollSubmit);
+
+                AlertDialog dialog = alertBuilder.create();
+
+                dialog.show();
             }
         });
     }
