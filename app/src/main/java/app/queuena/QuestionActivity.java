@@ -45,6 +45,8 @@ public class QuestionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
 
+        sessionIDFix();
+
         ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
         sessionGlobal = sessionLocal;
 
