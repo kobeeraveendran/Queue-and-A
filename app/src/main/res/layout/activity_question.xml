@@ -20,6 +20,15 @@
             android:id="@+id/lvQuestions"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tvEmptyQuestions"
+            android:gravity="center"
+            android:text="No messages to display"
+            android:textColor="@color/faded_text_color"
+            android:textSize="24sp"/>
     </FrameLayout>
 
     <View

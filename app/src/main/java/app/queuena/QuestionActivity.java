@@ -73,6 +73,8 @@ public class QuestionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sessionIDFix();
                 askQuestion(questionText.getText().toString());
+                questionList.add(questionText.getText().toString());
+                adapter.add(questionText.getText().toString());
                 questionText.setText("");
             }
         });
@@ -390,8 +392,12 @@ public class QuestionActivity extends AppCompatActivity {
         return tempList;
     }
 
-    private void populateQuestionView(ArrayList<String> list) {
+    private void populateQuestionView(ArrayList<String> questionList) {
+        adapter = new ArrayAdapter<String>(this, R.layout.message_item_self);
 
+        ListView list = findViewById(R.id.lvQuestions);
+        list.setEmptyView(findViewById(R.id.tvEmptyQuestions));
+        list.setAdapter(adapter);
     }
 
 }
