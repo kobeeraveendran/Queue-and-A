@@ -105,13 +105,29 @@ public class Queue extends AppCompatActivity {
             }
 
             sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
+            sessionIDFix();
+            SystemClock.sleep(200);
 
             JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
 
                         try {
-                            SystemClock.sleep(1000);
                             String active;
                             String archived;
                             String error;
@@ -160,8 +176,8 @@ public class Queue extends AppCompatActivity {
             public void onClick(View v) {
                 sessionIDFix();
                 askQuestion(questionText.getText().toString());
-                questionList.add(questionText.getText().toString());
-                adapter.add(questionText.getText().toString());
+               // questionList.add(questionText.getText().toString());
+                //adapter.add(questionText.getText().toString());
                 questionText.setText("");
             }
         });
@@ -175,6 +191,7 @@ public class Queue extends AppCompatActivity {
                 int numOptions;
                 int [] polls;
 
+                if(retval == null) return;
                 // display something if no polls are present
                 pollID = retval[0];
                 numOptions = retval[1];
