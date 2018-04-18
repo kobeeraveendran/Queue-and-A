@@ -29,10 +29,6 @@
         <activity
             android:name=".SessionsActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".MessageActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".QuestionActivity" />
     </application>
 

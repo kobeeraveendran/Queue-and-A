@@ -298,7 +298,7 @@ public class QuestionActivity extends AppCompatActivity {
                             questionList.add(questionListPlus.get(i)[1]);
                         }
 
-                        //populateQuestionView(questionList);
+                        populateQuestionView(questionList);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -332,5 +332,8 @@ public class QuestionActivity extends AppCompatActivity {
         return tempList;
     }
 
+    private void populateQuestionView(ArrayList<String> list) {
+
+    }
 
 }
