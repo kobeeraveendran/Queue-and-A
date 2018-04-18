@@ -40,6 +40,8 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private Button submitPollButton;
+    private ArrayList<String[]> questionListPlus = new ArrayList<String[]>();
+    private ArrayList<String> questionList = new ArrayList<String>();
 
     private int answer;
     private int numOptions = 0;
@@ -256,4 +258,77 @@ public class QuestionActivity extends AppCompatActivity {
             requestQueue.add(jsonRequest);
         }
     }
+
+    private void listQuestions(){
+        int isReadToggle =1;
+        String url = "http://cop4331-2.com/API/ListQuestions.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
+
+        JSONObject session_info = new JSONObject();
+
+        try {
+            session_info.put("session", sessionGlobal.get(2));
+            session_info.put("showRead", isReadToggle);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.w("SESSION INFO", session_info.toString());
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, session_info, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String result;
+                    String error;
+                    result = response.getString("result");
+                    error = response.getString("error");
+
+                    if(!error.equals("") || result.equals("")) {
+                        Toast.makeText(QuestionActivity.this, "No questions found.", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(!result.equals("") && error.equals("")) {
+                        Toast.makeText(QuestionActivity.this, "Question Queue found.", Toast.LENGTH_SHORT).show();
+                        questionListPlus = displayQuestions(result);
+
+                        for(int i = 0; i < questionListPlus.size(); i++) {
+                            Log.w("Question", questionListPlus.get(i)[1]);
+                            questionList.add(questionListPlus.get(i)[1]);
+                        }
+
+                        //populateQuestionView(questionList);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error ", error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonRequest);
+
+    }
+
+    private ArrayList<String[]> displayQuestions(String results){
+        ArrayList<String[]> tempList = new ArrayList<>();
+        String noPipes[] = results.trim().split("\\|\\|");
+        Log.w("PIPEYPIPE", noPipes[1]);
+        //Log.w("PIPEYPIPEV2", noPipes[3]);
+
+        for(int i=0; i<noPipes.length; i++ ){
+            String temp[];
+            temp = noPipes[i].split("\\|");
+            Log.w("TEMPYTEMP", temp.length + "");
+            Log.w("TEMPYVALUE", temp[0]);
+            tempList.add(temp);
+        }
+
+        return tempList;
+    }
+
+
 }
