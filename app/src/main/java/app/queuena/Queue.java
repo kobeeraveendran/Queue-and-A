@@ -127,10 +127,9 @@ public class Queue extends AppCompatActivity {
                             //numOptions = Integer.parseInt(activeSplit[2].trim());
 
                             Log.w("pollID", "" + retval[0]);
-                            break;
+
                         } catch (Exception e) {
                             e.printStackTrace();
-                            continue;
                         }
 
                 }
