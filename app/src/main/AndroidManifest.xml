@@ -29,7 +29,8 @@
         <activity
             android:name=".SessionsActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".QuestionActivity" />
+        <activity android:name=".Queue"
+            android:screenOrientation="portrait" />/
     </application>
 
 </manifest>

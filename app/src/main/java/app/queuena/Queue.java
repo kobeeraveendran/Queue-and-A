@@ -1,5 +1,6 @@
 package app.queuena;
 
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -22,14 +22,12 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.RequestQueue;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class QuestionActivity extends AppCompatActivity {
+public class Queue extends AppCompatActivity {
 
     private Button pollButton;
     private ImageButton sendButton;
@@ -41,19 +39,72 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton radioButton;
     private Button submitPollButton;
-    private ArrayList<String[]> questionListPlus = new ArrayList<String[]>();
-    private ArrayList<String> questionList = new ArrayList<String>();
-
+    private ArrayList<String[]> questionListPlus = new ArrayList<>();
+    private ArrayList<String> questionList = new ArrayList<>();
     private int answer;
-    //private int numOptions = 0;
-    //private int pollID;
-
     private int[] retval;
 
-    private int[] getPoll() {
+    /*private int [] getPoll() {
         String url = "http://cop4331-2.com/API/ListPolls.php";
 
-        RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
+
+        JSONObject payload = new JSONObject();
+
+        try {
+            payload.put("session", sessionGlobal.get(2));
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.w("READ THIS!!!!!", "Got here");
+                    String active;
+                    String archived;
+                    String error;
+
+                    active = response.getString("active");
+                    archived = response.getString("archived");
+                    error = response.getString("error");
+
+                    // split active polls
+                    String[] activeSplit = active.split("\\|");
+                    retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
+                    //pollID = Integer.parseInt(activeSplit[0].trim());
+                    //numOptions = Integer.parseInt(activeSplit[2].trim());
+
+                    Log.w("pollID","" + retval[0]);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonRequest);
+
+
+        return retval;
+    }*/
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_question);
+
+        ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
+        sessionGlobal = sessionLocal;
+
+        String url = "http://cop4331-2.com/API/ListPolls.php";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
 
         JSONObject payload = new JSONObject();
 
@@ -76,10 +127,12 @@ public class QuestionActivity extends AppCompatActivity {
                     error = response.getString("error");
 
                     // split active polls
-                    String[] activeSplit = active.split("\\|");
+                    String[] activeSplit = active.split("\\| ");
                     retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
                     //pollID = Integer.parseInt(activeSplit[0].trim());
                     //numOptions = Integer.parseInt(activeSplit[2].trim());
+
+                    Log.w("pollID","" + retval[0]);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -92,17 +145,6 @@ public class QuestionActivity extends AppCompatActivity {
         });
 
         requestQueue.add(jsonRequest);
-
-        return retval;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question);
-
-        ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
-        sessionGlobal = sessionLocal;
 
         questionText = findViewById(R.id.etMessageContent);
 
@@ -133,18 +175,19 @@ public class QuestionActivity extends AppCompatActivity {
 
                 final int pollID;
                 int numOptions;
+                int [] polls;
 
                 // display something if no polls are present
-                pollID = getPoll()[0];
-                numOptions = getPoll()[1];
+                pollID = retval[0];
+                numOptions = retval[1];
 
 
                 if(numOptions == 0) {
-                    Toast.makeText(QuestionActivity.this, "No polls to display", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Queue.this, "No polls to display", Toast.LENGTH_SHORT).show();
                 }
                 else {
 
-                    final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(QuestionActivity.this);
+                    final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Queue.this);
                     View mView = getLayoutInflater().inflate(R.layout.dialog_poll, null);
 
                     alertBuilder.setCancelable(true);
@@ -160,7 +203,7 @@ public class QuestionActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             // session is sessionLocal.get(2)
 
-                            RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
+                            RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
 
                             String url = "http://cop4331-2.com/API/VoteOnPoll.php";
 
@@ -237,7 +280,7 @@ public class QuestionActivity extends AppCompatActivity {
     private void sessionIDFix(){
         String url = "http://cop4331-2.com/API/SetSessionID.php";
 
-        RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
 
         JSONObject payload = new JSONObject();
 
@@ -257,7 +300,7 @@ public class QuestionActivity extends AppCompatActivity {
                     String errorMsg = response.getString("error");
 
                     if(!errorMsg.equals("")) {
-                        Toast.makeText(QuestionActivity.this, "set SessionID failure", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Queue.this, "set SessionID failure", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {
@@ -280,7 +323,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         if(question.equals("")) {
             flag = false;
-            Toast.makeText(QuestionActivity.this, "Please enter a question.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Queue.this, "Please enter a question.", Toast.LENGTH_SHORT).show();
         }
 
         return flag;
@@ -290,7 +333,7 @@ public class QuestionActivity extends AppCompatActivity {
         if(validate(text)) {
             String url = "http://cop4331-2.com/API/AskQuestion.php";
 
-            RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
+            RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
 
             JSONObject payload = new JSONObject();
             try {
@@ -326,7 +369,7 @@ public class QuestionActivity extends AppCompatActivity {
     private void listQuestions(){
         int isReadToggle =1;
         String url = "http://cop4331-2.com/API/ListQuestions.php";
-        RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
 
         JSONObject session_info = new JSONObject();
 
@@ -349,10 +392,10 @@ public class QuestionActivity extends AppCompatActivity {
                     error = response.getString("error");
 
                     if(!error.equals("") || result.equals("")) {
-                        Toast.makeText(QuestionActivity.this, "No questions found.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Queue.this, "No questions found.", Toast.LENGTH_SHORT).show();
                     }
                     else if(!result.equals("") && error.equals("")) {
-                        Toast.makeText(QuestionActivity.this, "Question Queue found.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Queue.this, "Question Queue found.", Toast.LENGTH_SHORT).show();
                         questionListPlus = displayQuestions(result);
 
                         for(int i = 0; i < questionListPlus.size(); i++) {
@@ -403,3 +446,5 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
 }
+
+

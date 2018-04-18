@@ -190,7 +190,7 @@ public class SessionsActivity extends AppCompatActivity {
                 }
                 */
 
-                Intent goToQuestions = new Intent(SessionsActivity.this, QuestionActivity.class);
+                Intent goToQuestions = new Intent(SessionsActivity.this, Queue.class);
                 sessionGlobal.set(3, activeSessions.get(position)[0]);
                 goToQuestions.putExtra("SESSION_INFO", sessionGlobal);
                 startActivity(goToQuestions);
@@ -216,7 +216,7 @@ public class SessionsActivity extends AppCompatActivity {
         archivedListVIew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent goToQuestions = new Intent(SessionsActivity.this, QuestionActivity.class);
+                Intent goToQuestions = new Intent(SessionsActivity.this, Queue.class);
                 // send info in intent
                 startActivity(goToQuestions);
             }
