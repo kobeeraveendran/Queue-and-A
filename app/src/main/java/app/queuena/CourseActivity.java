@@ -74,6 +74,8 @@ public class CourseActivity extends AppCompatActivity {
 
                     if(error.equals("No classes found") || result.equals("")) {
                         Toast.makeText(CourseActivity.this, "No classes found", Toast.LENGTH_SHORT).show();
+                        index =courseListWithID.size() - 1;
+                        populateListView(courseList);
                     }
                     else if(!result.equals("") && error.equals("")) {
                         // Toast.makeText(CourseActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
@@ -339,7 +341,7 @@ public class CourseActivity extends AppCompatActivity {
                     else if(!result.equals("") && error.equals("")) {
                         courseListWithID = displayClasses(result);
 
-                        adapter.add(courseListWithID.get(index + 1)[1]);
+                        adapter.add(courseListWithID.get(index +1)[1]);
 
                     }
                 } catch (JSONException e) {

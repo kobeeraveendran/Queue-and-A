@@ -98,8 +98,7 @@ public class MessageActivity extends AppCompatActivity {
 
                 message_root.updateChildren(map2);
 
-                String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
-                messageList.add(new CustomMessage(questionText.getText().toString(), currentDateTime));
+                //messageList.add(new CustomMessage(questionText.getText().toString(), ));
 
                 askQuestion(questionText.getText().toString());
                 questionText.setText("");
@@ -149,6 +148,9 @@ public class MessageActivity extends AppCompatActivity {
 
         while(i.hasNext()) {
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
+            String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
+            messageList.add(new CustomMessage(chat_msg, currentDateTime));
+            adapter.notifyDataSetChanged();
         }
     }
 
