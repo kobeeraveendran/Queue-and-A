@@ -4,7 +4,7 @@
 
     <!-- background color -->
     <solid
-        android:color="#9952d273" >
+        android:color="@color/colorDark" >
     </solid>
 
     <!-- rounded corners -->
@@ -13,4 +13,3 @@
     </corners>
 
 </shape>
-

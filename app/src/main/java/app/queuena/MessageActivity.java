@@ -51,12 +51,17 @@ public class MessageActivity extends AppCompatActivity {
     private ScrollView scrollView;
     private String tempKey;
     private boolean emptyFlag = true;
+    static private ArrayList<CustomMessage> messageList;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private DatabaseReference root;
+
+    public static ArrayList<CustomMessage> getMessageList() {
+        return messageList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +70,14 @@ public class MessageActivity extends AppCompatActivity {
 
         sendBtn = findViewById(R.id.imgbtnSendMessage);
         questionText = findViewById(R.id.etMessageContent);
-        chatElement = findViewById(R.id.tvMessage);
-        scrollView = findViewById(R.id.svQuestions);
+        chatElement = findViewById(R.id.tvSelfMessageBody);
         recyclerView = findViewById(R.id.rvMessageList);
 
         layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        setTitle("Question Queue");
-
-        //questionListView = findViewById(R.id.lvQuestionList);
+        init();
 
         ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
         sessionGlobal = sessionLocal;
@@ -132,6 +135,12 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+    private void init() {
+        messageList = new ArrayList<>();
+
+
+    }
+
     private String chat_msg;
 
     private void append_chat_conversation(DataSnapshot dataSnapshot) {
@@ -139,6 +148,7 @@ public class MessageActivity extends AppCompatActivity {
 
         while(i.hasNext()) {
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
+            messageList.add(new CustomMessage(chat_msg, java.time.LocalDate.now().toString()));
             chatElement.append(chat_msg + "\n");
         }
     }
