@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,9 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -75,8 +79,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     try {
                         payload.put("email", user_email);
                         payload.put("name", user_name);
-                        payload.put("password", user_password);
+                        payload.put("password", hash(user_password));
                     } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e){
                         e.printStackTrace();
                     }
 
@@ -128,6 +134,16 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         return flag;
+    }
+
+    public static String hash(String str) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(str.getBytes());
+        byte[] digest = md.digest();
+        String hash = Base64.encodeToString(digest, Base64.DEFAULT);
+        byte[] decoded = Base64.decode(hash, Base64.DEFAULT);
+        hash = (String.format("%032x", new BigInteger(1, decoded)));
+        return hash;
     }
 
 }
