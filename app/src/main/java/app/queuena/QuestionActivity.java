@@ -194,12 +194,10 @@ public class QuestionActivity extends AppCompatActivity {
                     archived = response.getString("archived");
                     error = response.getString("error");
 
-                    Log.w("ACTIVE POLL", active);
-                    Log.w("ARCHIVED POLL", archived);
-                    Log.w("POLL ERROR", error);
-
                     // split active polls
                     String[] activeSplit = active.split("\\|");
+                    Log.w("ACTIVE POLL ID", activeSplit[0]);
+                    Log.w("ACTIVE POLL NUM ANSWERS", activeSplit[2]);
                     pollID = Integer.parseInt(activeSplit[0].trim());
                     numOptions = Integer.parseInt(activeSplit[2].trim());
                 } catch (JSONException e) {
