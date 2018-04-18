@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/rgChoices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
@@ -16,17 +16,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="A"
+            android:checked="true"
             android:onClick="checkButton"
-            android:checked="true"/>
+            android:text="A" />
 
         <RadioButton
             android:id="@+id/rbB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="B"
-            android:onClick="checkButton"/>
+            android:onClick="checkButton"
+            android:text="B" />
 
         <RadioButton
             android:id="@+id/rbC"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="C"
-            android:onClick="checkButton"/>
+            android:onClick="checkButton" />
 
         <RadioButton
             android:id="@+id/rbD"
@@ -49,8 +49,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="E"
-            android:onClick="checkButton"/>
+            android:onClick="checkButton"
+            android:text="E" />
     </RadioGroup>
 
     <Button

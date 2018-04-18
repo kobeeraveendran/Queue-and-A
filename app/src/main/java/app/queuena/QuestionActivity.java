@@ -41,7 +41,7 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioButton radioButton;
     private Button submitPollButton;
 
-    private int buttonClicked;
+    private int answer;
     private int numOptions = 0;
 
     @Override
@@ -57,7 +57,7 @@ public class QuestionActivity extends AppCompatActivity {
         sendButton = findViewById(R.id.imgbtnSendMessage);
         pollButton = findViewById(R.id.btnPoll);
 
-        radioGroup = findViewById(R.id.radioGroup);
+        radioGroup = findViewById(R.id.rgChoices);
 
         sessionIDFix();
 
@@ -79,6 +79,8 @@ public class QuestionActivity extends AppCompatActivity {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(QuestionActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_poll, null);
 
+
+
                 alertBuilder.setCancelable(true);
                 alertBuilder.setView(mView);
 
@@ -92,9 +94,36 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     public void checkButton(View v) {
-        int radioButtonId = radioGroup.getCheckedRadioButtonId();
+        //int radioButtonId = radioGroup.getCheckedRadioButtonId();
+        boolean checked = ((RadioButton) v).isChecked();
 
-        radioButton = findViewById(radioButtonId);
+        switch(v.getId()) {
+            case R.id.rbA:
+                if(checked) {
+                    answer = 1;
+                }
+                break;
+            case R.id.rbB:
+                if(checked) {
+                    answer = 2;
+                }
+                break;
+            case R.id.rbC:
+                if(checked) {
+                    answer = 3;
+                }
+                break;
+            case R.id.rbD:
+                if(checked) {
+                    answer = 4;
+                }
+                break;
+            case R.id.rbE:
+                if(checked) {
+                    answer = 5;
+                }
+                break;
+        }
     }
 
     private void getPoll() {
