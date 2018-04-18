@@ -95,6 +95,8 @@ public class QuestionActivity extends AppCompatActivity {
                     AlertDialog dialog = alertBuilder.create();
                     dialog.show();
 
+                    submitPollButton = mView.findViewById(R.id.btnPollSubmit);
+
                     submitPollButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
