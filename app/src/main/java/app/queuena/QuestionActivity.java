@@ -84,9 +84,10 @@ public class QuestionActivity extends AppCompatActivity {
 
                 final int pollID;
                 int numOptions;
+                int[] temp = getPoll();
                 // display something if no polls are present
-                pollID = getPoll()[0];
-                numOptions = getPoll()[1];
+                pollID = temp[0];
+                numOptions = temp[1];
 
 
                 if(numOptions == 0) {
