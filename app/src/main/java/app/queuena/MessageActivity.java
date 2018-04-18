@@ -33,7 +33,9 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -74,6 +76,7 @@ public class MessageActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvMessageList);
 
         layoutManager = new LinearLayoutManager(this);
+        recyclerViewAdapter = new MyAdapter(this, messageList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerViewAdapter);
 
@@ -99,7 +102,6 @@ public class MessageActivity extends AppCompatActivity {
 
                 message_root.updateChildren(map2);
 
-                sessionIDFix();
                 askQuestion(questionText.getText().toString());
                 questionText.setText("");
             }
@@ -110,11 +112,13 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 append_chat_conversation(dataSnapshot);
+                recyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 append_chat_conversation(dataSnapshot);
+                recyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -148,50 +152,12 @@ public class MessageActivity extends AppCompatActivity {
 
         while(i.hasNext()) {
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
-            messageList.add(new CustomMessage(chat_msg, java.time.LocalDate.now().toString()));
+            String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
+            messageList.add(new CustomMessage(chat_msg, currentDateTime));
             chatElement.append(chat_msg + "\n");
         }
     }
 
-    private void sessionIDFix(){
-        String url = "http://cop4331-2.com/API/SetSessionID.php";
-
-        RequestQueue requestQueue = Volley.newRequestQueue(MessageActivity.this);
-
-        JSONObject payload = new JSONObject();
-
-
-        try {
-            payload.put("session", sessionGlobal.get(2));
-            payload.put("sessionID", sessionGlobal.get(3));
-            payload.put("sessionName", "");
-        } catch(JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String errorMsg = response.getString("error");
-
-                    if(!errorMsg.equals("")) {
-                        Toast.makeText(MessageActivity.this, "set SessionID failure", Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error ", error.getMessage());
-            }
-        });
-
-        requestQueue.add(jsonRequest);
-    }
 
     private void askQuestion(String text) {
         if(validate(text)) {

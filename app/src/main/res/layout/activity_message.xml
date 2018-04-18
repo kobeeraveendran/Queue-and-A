@@ -101,7 +101,6 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_text_button"
         android:radius="20dp"
-        android:shadowRadius="20dp"
         android:text="Poll"
         android:textColor="@color/self_messages_color"
         app:layout_constraintBottom_toTopOf="@+id/rvMessageList"

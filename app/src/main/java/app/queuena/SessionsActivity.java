@@ -211,6 +211,7 @@ public class SessionsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent goToQuestions = new Intent(SessionsActivity.this, MessageActivity.class);
                 // send info in intent
+                sessionIDFix();
                 startActivity(goToQuestions);
             }
         });
@@ -262,4 +263,44 @@ public class SessionsActivity extends AppCompatActivity {
         requestQueue.add(jsonRequest);
     }
 
+
+    private void sessionIDFix(){
+        String url = "http://cop4331-2.com/API/SetSessionID.php";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(SessionsActivity.this);
+
+        JSONObject payload = new JSONObject();
+
+
+        try {
+            payload.put("session", sessionGlobal.get(2));
+            payload.put("sessionID", sessionGlobal.get(3));
+            payload.put("sessionName", "");
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String errorMsg = response.getString("error");
+
+                    if(!errorMsg.equals("")) {
+                        Toast.makeText(SessionsActivity.this, "set SessionID failure", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error ", error.getMessage());
+            }
+        });
+
+        requestQueue.add(jsonRequest);
+    }
 }

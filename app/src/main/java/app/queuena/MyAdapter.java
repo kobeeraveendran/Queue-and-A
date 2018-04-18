@@ -1,5 +1,6 @@
 package app.queuena;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
@@ -20,6 +21,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public static final int VIEW_TYPE_MESSAGE_SENT = 1;
     public static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
+
+    private Context mContext;
+    private ArrayList<CustomMessage> msgList;
+
+    public MyAdapter(Context ctx, ArrayList<CustomMessage> messageList) {
+        mContext = ctx;
+        msgList = messageList;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView messageTextView;
@@ -69,7 +78,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyAdapter.ViewHolder holder, int position) {
-        CustomMessage message = MessageActivity.getMessageList().get(position);
+        CustomMessage message = msgList.get(position);
         ((ViewHolder) holder).bind(message);
     }
 
