@@ -45,6 +45,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private int answer;
     private int numOptions = 0;
+    private int pollID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,20 +80,59 @@ public class QuestionActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // display something if no polls are present
+                getPoll();
 
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(QuestionActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_poll, null);
+                if(numOptions == 0) {
+                    Toast.makeText(QuestionActivity.this, "No polls to display", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(QuestionActivity.this);
+                    View mView = getLayoutInflater().inflate(R.layout.dialog_poll, null);
 
+                    alertBuilder.setCancelable(true);
+                    alertBuilder.setView(mView);
+                    AlertDialog dialog = alertBuilder.create();
+                    dialog.show();
 
+                    submitPollButton = findViewById(R.id.btnPollSubmit);
 
-                alertBuilder.setCancelable(true);
-                alertBuilder.setView(mView);
+                    submitPollButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // session is sessionLocal.get(2)
 
-                submitPollButton = findViewById(R.id.btnPollSubmit);
+                            RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
 
-                AlertDialog dialog = alertBuilder.create();
+                            String url = "http://cop4331-2.com/API/VoteOnPoll.php";
 
-                dialog.show();
+                            JSONObject payload = new JSONObject();
+                            try {
+                                payload.put("session", sessionGlobal.get(2));
+                                payload.put("pollID", pollID);
+                                payload.put("answer", answer);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        String error = response.getString("error");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    VolleyLog.e("Error: ", error.getMessage());
+                                }
+                            });
+
+                        }
+                    });
+                }
             }
         });
     }
@@ -157,6 +197,7 @@ public class QuestionActivity extends AppCompatActivity {
 
                     // split active polls
                     String[] activeSplit = active.split("\\|");
+                    pollID = Integer.parseInt(activeSplit[0].trim());
                     numOptions = Integer.parseInt(activeSplit[2].trim());
                 } catch (JSONException e) {
                     e.printStackTrace();
