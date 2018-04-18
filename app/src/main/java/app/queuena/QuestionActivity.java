@@ -37,7 +37,11 @@ public class QuestionActivity extends AppCompatActivity {
     private ArrayList<String> sessionGlobal;
     private ArrayAdapter<String> adapter;
     private boolean emptyFlag = true;
+    private RadioGroup radioGroup;
+    private RadioButton radioButton;
+    private Button submitPollButton;
 
+    private int buttonClicked;
     private int numOptions = 0;
 
     @Override
@@ -52,6 +56,8 @@ public class QuestionActivity extends AppCompatActivity {
 
         sendButton = findViewById(R.id.imgbtnSendMessage);
         pollButton = findViewById(R.id.btnPoll);
+
+        radioGroup = findViewById(R.id.radioGroup);
 
         sessionIDFix();
 
@@ -68,39 +74,23 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                // display something if no polls are present
+
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(QuestionActivity.this);
                 View mView = getLayoutInflater().inflate(R.layout.dialog_poll, null);
 
                 alertBuilder.setCancelable(true);
                 alertBuilder.setView(mView);
 
-                LinearLayout linearLayout = findViewById(R.id.llPoll);
-                RadioGroup radioGroup = new RadioGroup(QuestionActivity.this);
-
-                linearLayout.addView(radioGroup);
-
-                for(int i = 0; i < numOptions; i++) {
-                    RadioButton radioButtonView = new RadioButton(QuestionActivity.this);
-                    if(i == 0) {
-                        radioButtonView.setText("A");
-                    }
-                    else if(i == 1) {
-                        radioButtonView.setText("B");
-                    }
-                    else if(i == 2) {
-                        radioButtonView.setText("C");
-                    }
-                    else if(i == 3) {
-                        radioButtonView.setText("D");
-                    }
-                    else if(i == 4) {
-                        radioButtonView.setText("E");
-                    }
-
-                    linearLayout.addView(radioButtonView);
-                }
+                submitPollButton = findViewById(R.id.btnPollSubmit);
             }
         });
+    }
+
+    public void checkButton(View v) {
+        int radioButtonId = radioGroup.getCheckedRadioButtonId();
+
+        radioButton = findViewById(radioButtonId);
     }
 
     private void getPoll() {
@@ -130,7 +120,7 @@ public class QuestionActivity extends AppCompatActivity {
 
                     // split active polls
                     String[] activeSplit = active.split("\\|");
-                    numOptions = Integer.parseInt(activeSplit[2]);
+                    numOptions = Integer.parseInt(activeSplit[2].trim());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
