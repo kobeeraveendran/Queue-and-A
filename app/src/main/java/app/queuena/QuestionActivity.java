@@ -83,10 +83,14 @@ public class QuestionActivity extends AppCompatActivity {
                 // display something if no polls are present
                 getPoll();
 
+                Log.w("NUM CHOICES", Integer.toString(numOptions));
+                Log.w("POLL ID", Integer.toString(pollID));
+
                 if(numOptions == 0) {
                     Toast.makeText(QuestionActivity.this, "No polls to display", Toast.LENGTH_SHORT).show();
                 }
                 else {
+
                     final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(QuestionActivity.this);
                     View mView = getLayoutInflater().inflate(R.layout.dialog_poll, null);
 
@@ -94,6 +98,9 @@ public class QuestionActivity extends AppCompatActivity {
                     alertBuilder.setView(mView);
 
                     submitPollButton = mView.findViewById(R.id.btnPollSubmit);
+
+                    AlertDialog dialog = alertBuilder.create();
+
 
                     submitPollButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -134,7 +141,6 @@ public class QuestionActivity extends AppCompatActivity {
                         }
                     });
 
-                    AlertDialog dialog = alertBuilder.create();
                     dialog.show();
                 }
             }
