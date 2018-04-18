@@ -118,6 +118,8 @@ public class QuestionActivity extends AppCompatActivity {
                                 public void onResponse(JSONObject response) {
                                     try {
                                         String error = response.getString("error");
+
+                                        Log.w("ERROR", error);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
