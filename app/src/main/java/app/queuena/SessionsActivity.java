@@ -149,18 +149,23 @@ public class SessionsActivity extends AppCompatActivity {
         activeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                /*
                 if(emptyFlag) {
                     isEmptyQ();
                 }
-
+                */
                 // check if first question
                 // create firebase child
+
+                /*
                 if(emptyFlag) {
                     Map<String, Object> map = new HashMap<>();
                     map.put(activeSessions.get(position)[0], "");
                     root.updateChildren(map);
 
                     emptyFlag = false;
+
 
 
                     root.addValueEventListener(new ValueEventListener() {
@@ -181,7 +186,9 @@ public class SessionsActivity extends AppCompatActivity {
                         }
                     });
 
+
                 }
+                */
 
                 Intent goToQuestions = new Intent(SessionsActivity.this, QuestionActivity.class);
                 sessionGlobal.add(activeSessions.get(position)[0]);
