@@ -154,7 +154,6 @@ public class MessageActivity extends AppCompatActivity {
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
             String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
             messageList.add(new CustomMessage(chat_msg, currentDateTime));
-            chatElement.append(chat_msg + "\n");
         }
     }
 
