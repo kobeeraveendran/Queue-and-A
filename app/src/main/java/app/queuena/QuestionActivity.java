@@ -44,8 +44,10 @@ public class QuestionActivity extends AppCompatActivity {
     private ArrayList<String> questionList = new ArrayList<String>();
 
     private int answer;
-    private int numOptions = 0;
-    private int pollID;
+    //private int numOptions = 0;
+    //private int pollID;
+
+    private int[] retval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +82,12 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                final int pollID;
+                int numOptions;
                 // display something if no polls are present
-                getPoll();
+                pollID = getPoll()[0];
+                numOptions = getPoll()[1];
 
-                Log.w("NUM CHOICES", Integer.toString(numOptions));
-                Log.w("POLL ID", Integer.toString(pollID));
 
                 if(numOptions == 0) {
                     Toast.makeText(QuestionActivity.this, "No polls to display", Toast.LENGTH_SHORT).show();
@@ -180,7 +183,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
     }
 
-    private void getPoll() {
+    private int[] getPoll() {
         String url = "http://cop4331-2.com/API/ListPolls.php";
 
         RequestQueue requestQueue = Volley.newRequestQueue(QuestionActivity.this);
@@ -207,10 +210,9 @@ public class QuestionActivity extends AppCompatActivity {
 
                     // split active polls
                     String[] activeSplit = active.split("\\|");
-                    Log.w("ACTIVE POLL ID", activeSplit[0]);
-                    Log.w("ACTIVE POLL NUM ANSWERS", activeSplit[2]);
-                    pollID = Integer.parseInt(activeSplit[0].trim());
-                    numOptions = Integer.parseInt(activeSplit[2].trim());
+                    retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
+                    //pollID = Integer.parseInt(activeSplit[0].trim());
+                    //numOptions = Integer.parseInt(activeSplit[2].trim());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -223,6 +225,8 @@ public class QuestionActivity extends AppCompatActivity {
         });
 
         requestQueue.add(jsonRequest);
+
+        return retval;
     }
 
     private void sessionIDFix(){
