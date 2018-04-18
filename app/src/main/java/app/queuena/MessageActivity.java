@@ -61,10 +61,6 @@ public class MessageActivity extends AppCompatActivity {
 
     private DatabaseReference root;
 
-    public static ArrayList<CustomMessage> getMessageList() {
-        return messageList;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,38 +98,39 @@ public class MessageActivity extends AppCompatActivity {
 
                 message_root.updateChildren(map2);
 
+                String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
+                messageList.add(new CustomMessage(questionText.getText().toString(), currentDateTime));
+
                 askQuestion(questionText.getText().toString());
                 questionText.setText("");
-            }
-        });
 
+                root.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        // append_chat_conversation(dataSnapshot);
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
 
-        root.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                append_chat_conversation(dataSnapshot);
-                recyclerViewAdapter.notifyDataSetChanged();
-            }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        recyclerViewAdapter.notifyDataSetChanged();
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                append_chat_conversation(dataSnapshot);
-                recyclerViewAdapter.notifyDataSetChanged();
-            }
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    }
 
-            }
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    }
 
-            }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+                    }
+                });
             }
         });
 
@@ -152,8 +149,6 @@ public class MessageActivity extends AppCompatActivity {
 
         while(i.hasNext()) {
             chat_msg = (String) ((DataSnapshot)i.next()).getValue();
-            String currentDateTime = DateFormat.getDateTimeInstance().format(new Date());
-            messageList.add(new CustomMessage(chat_msg, currentDateTime));
         }
     }
 
