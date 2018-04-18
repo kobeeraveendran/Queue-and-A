@@ -46,17 +46,13 @@ public class Queue extends AppCompatActivity {
 
     /*private int [] getPoll() {
         String url = "http://cop4331-2.com/API/ListPolls.php";
-
         RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
-
         JSONObject payload = new JSONObject();
-
         try {
             payload.put("session", sessionGlobal.get(2));
         } catch(JSONException e) {
             e.printStackTrace();
         }
-
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -65,17 +61,14 @@ public class Queue extends AppCompatActivity {
                     String active;
                     String archived;
                     String error;
-
                     active = response.getString("active");
                     archived = response.getString("archived");
                     error = response.getString("error");
-
                     // split active polls
                     String[] activeSplit = active.split("\\|");
                     retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
                     //pollID = Integer.parseInt(activeSplit[0].trim());
                     //numOptions = Integer.parseInt(activeSplit[2].trim());
-
                     Log.w("pollID","" + retval[0]);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -87,10 +80,7 @@ public class Queue extends AppCompatActivity {
                 VolleyLog.e("Error: ", error.getMessage());
             }
         });
-
         requestQueue.add(jsonRequest);
-
-
         return retval;
     }*/
 
@@ -102,49 +92,58 @@ public class Queue extends AppCompatActivity {
         ArrayList<String> sessionLocal = getIntent().getStringArrayListExtra("SESSION_INFO");
         sessionGlobal = sessionLocal;
 
-        String url = "http://cop4331-2.com/API/ListPolls.php";
+            String url = "http://cop4331-2.com/API/ListPolls.php";
 
-        RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
+            RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
 
-        JSONObject payload = new JSONObject();
+            JSONObject payload = new JSONObject();
 
-        try {
-            payload.put("session", sessionGlobal.get(2));
-        } catch(JSONException e) {
-            e.printStackTrace();
-        }
+            try {
+                payload.put("session", sessionGlobal.get(2));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String active;
-                    String archived;
-                    String error;
+            sessionIDFix();
 
-                    active = response.getString("active");
-                    archived = response.getString("archived");
-                    error = response.getString("error");
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
 
-                    // split active polls
-                    String[] activeSplit = active.split("\\| ");
-                    retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
-                    //pollID = Integer.parseInt(activeSplit[0].trim());
-                    //numOptions = Integer.parseInt(activeSplit[2].trim());
+                        try {
+                            SystemClock.sleep(1000);
+                            String active;
+                            String archived;
+                            String error;
 
-                    Log.w("pollID","" + retval[0]);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                            active = response.getString("active");
+                            archived = response.getString("archived");
+                            error = response.getString("error");
+
+                            // split active polls
+                            String[] activeSplit = active.split("\\| ");
+                            retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
+                            //pollID = Integer.parseInt(activeSplit[0].trim());
+                            //numOptions = Integer.parseInt(activeSplit[2].trim());
+
+                            Log.w("pollID", "" + retval[0]);
+                            break;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            continue;
+                        }
+
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-            }
-        });
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.e("Error: ", error.getMessage());
+                }
+            });
 
-        requestQueue.add(jsonRequest);
+
+            requestQueue.add(jsonRequest);
+
 
         questionText = findViewById(R.id.etMessageContent);
 
@@ -154,7 +153,7 @@ public class Queue extends AppCompatActivity {
 
         radioGroup = findViewById(R.id.rgChoices);
 
-        sessionIDFix();
+
 
         // send message button
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +211,7 @@ public class Queue extends AppCompatActivity {
                                 payload.put("session", sessionGlobal.get(2));
                                 payload.put("pollID", pollID);
                                 payload.put("answer", answer);
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
@@ -223,7 +222,7 @@ public class Queue extends AppCompatActivity {
                                         String error = response.getString("error");
 
                                         Log.w("ERROR", error);
-                                    } catch (JSONException e) {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }
@@ -233,10 +232,9 @@ public class Queue extends AppCompatActivity {
                                     VolleyLog.e("Error: ", error.getMessage());
                                 }
                             });
-
+                            requestQueue.add(jsonRequest);
                         }
                     });
-
                     dialog.show();
                 }
             }
@@ -289,9 +287,10 @@ public class Queue extends AppCompatActivity {
             payload.put("session", sessionGlobal.get(2));
             payload.put("sessionID", sessionGlobal.get(3));
             payload.put("sessionName", "");
-        } catch(JSONException e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
+
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
             @Override
@@ -301,9 +300,10 @@ public class Queue extends AppCompatActivity {
 
                     if(!errorMsg.equals("")) {
                         Toast.makeText(Queue.this, "set SessionID failure", Toast.LENGTH_SHORT).show();
+
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -315,6 +315,7 @@ public class Queue extends AppCompatActivity {
         });
 
         requestQueue.add(jsonRequest);
+
     }
 
     private Boolean validate(String question) {
@@ -340,7 +341,7 @@ public class Queue extends AppCompatActivity {
                 payload.put("session", sessionGlobal.get(2));
                 payload.put("text", text);
                 Log.w("TAG", payload.getString("session")+payload.getString("text"));
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -351,7 +352,7 @@ public class Queue extends AppCompatActivity {
                         String error;
                         error = response.getString("error");
                         Log.w("TAG", "error : "+ error );
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -376,7 +377,7 @@ public class Queue extends AppCompatActivity {
         try {
             session_info.put("session", sessionGlobal.get(2));
             session_info.put("showRead", isReadToggle);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -446,5 +447,3 @@ public class Queue extends AppCompatActivity {
     }
 
 }
-
-
