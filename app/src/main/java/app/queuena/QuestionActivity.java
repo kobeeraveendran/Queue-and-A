@@ -67,7 +67,9 @@ public class QuestionActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sessionIDFix();
+                askQuestion(questionText.getText().toString());
+                questionText.setText("");
             }
         });
 

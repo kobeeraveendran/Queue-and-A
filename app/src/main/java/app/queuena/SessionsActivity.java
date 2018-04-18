@@ -149,7 +149,7 @@ public class SessionsActivity extends AppCompatActivity {
         activeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                //sessionGlobal.set(3,activeSessions.get(position)[0]);
                 /*
                 if(emptyFlag) {
                     isEmptyQ();
@@ -191,7 +191,7 @@ public class SessionsActivity extends AppCompatActivity {
                 */
 
                 Intent goToQuestions = new Intent(SessionsActivity.this, QuestionActivity.class);
-                sessionGlobal.add(activeSessions.get(position)[0]);
+                sessionGlobal.set(3, activeSessions.get(position)[0]);
                 goToQuestions.putExtra("SESSION_INFO", sessionGlobal);
                 startActivity(goToQuestions);
             }

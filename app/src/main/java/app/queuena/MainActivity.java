@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                                     info.add(email);
                                     info.add(password);
                                     info.add(session);
+                                    info.add("1");
                                     goToCourses.putExtra("SESSION_INFO", info);
                                     startActivity(goToCourses);
                                 }

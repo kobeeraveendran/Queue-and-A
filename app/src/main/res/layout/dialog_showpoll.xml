@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/colorDark">
+
+    <TextView
+        android:id="@+id/tvAddClassID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Answer Poll"
+        android:textColor="@color/text_color"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+    <!--
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.501"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" /> -->
+
+
+    <EditText
+        android:id="@+id/etAddClassID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_below="@id/tvAddClassID"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="82dp"
+        android:ems="10"
+        android:hint="Class ID"
+        android:inputType="textPersonName"
+        android:text=""
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/faded_text_color" />
+    <!--
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.503"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvAddClassID"
+    app:layout_constraintVertical_bias="0.0" />
+    -->
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etAddClassID"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:text="Add" />
+    <!--
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/etAddClassID"
+    app:layout_constraintVertical_bias="0.0" /> -->
+    <!--
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etAddClassID"
+            android:text="Cancel"
+            android:layout_toLeftOf="@+id/btnAdd" />
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.083"
+            app:layout_constraintStart_toEndOf="@+id/btnAdd"
+            app:layout_constraintTop_toBottomOf="@+id/etAddClassID"
+            app:layout_constraintVertical_bias="0.0" /> -->
+
+</RelativeLayout>
