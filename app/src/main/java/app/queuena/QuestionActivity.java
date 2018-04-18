@@ -58,6 +58,7 @@ public class QuestionActivity extends AppCompatActivity {
         questionText = findViewById(R.id.etMessageContent);
 
         sendButton = findViewById(R.id.imgbtnSendMessage);
+        submitPollButton = findViewById(R.id.btnPollSubmit);
         pollButton = findViewById(R.id.btnPoll);
 
         radioGroup = findViewById(R.id.rgChoices);
@@ -93,8 +94,6 @@ public class QuestionActivity extends AppCompatActivity {
                     alertBuilder.setView(mView);
                     AlertDialog dialog = alertBuilder.create();
                     dialog.show();
-
-                    submitPollButton = findViewById(R.id.btnPollSubmit);
 
                     submitPollButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -194,6 +193,10 @@ public class QuestionActivity extends AppCompatActivity {
                     active = response.getString("active");
                     archived = response.getString("archived");
                     error = response.getString("error");
+
+                    Log.w("ACTIVE POLL", active);
+                    Log.w("ARCHIVED POLL", archived);
+                    Log.w("POLL ERROR", error);
 
                     // split active polls
                     String[] activeSplit = active.split("\\|");
