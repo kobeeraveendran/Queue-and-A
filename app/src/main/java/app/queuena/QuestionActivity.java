@@ -94,6 +94,8 @@ public class QuestionActivity extends AppCompatActivity {
                     else if(i == 4) {
                         radioButtonView.setText("E");
                     }
+
+                    linearLayout.addView(radioButtonView);
                 }
             }
         });
