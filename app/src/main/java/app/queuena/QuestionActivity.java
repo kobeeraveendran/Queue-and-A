@@ -393,7 +393,7 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void populateQuestionView(ArrayList<String> questionList) {
-        adapter = new ArrayAdapter<String>(this, R.layout.message_item_self);
+        adapter = new ArrayAdapter<String>(this, R.layout.message_item_self, R.id.tvSelfMessageBody, questionList);
 
         ListView list = findViewById(R.id.lvQuestions);
         list.setEmptyView(findViewById(R.id.tvEmptyQuestions));
