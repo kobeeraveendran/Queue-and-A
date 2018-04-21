@@ -24,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.android.volley.RequestQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -44,45 +45,6 @@ public class Queue extends AppCompatActivity {
     private int answer;
     private int[] retval;
 
-    /*private int [] getPoll() {
-        String url = "http://cop4331-2.com/API/ListPolls.php";
-        RequestQueue requestQueue = Volley.newRequestQueue(Queue.this);
-        JSONObject payload = new JSONObject();
-        try {
-            payload.put("session", sessionGlobal.get(2));
-        } catch(JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, payload, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    Log.w("READ THIS!!!!!", "Got here");
-                    String active;
-                    String archived;
-                    String error;
-                    active = response.getString("active");
-                    archived = response.getString("archived");
-                    error = response.getString("error");
-                    // split active polls
-                    String[] activeSplit = active.split("\\|");
-                    retval = new int[]{Integer.parseInt(activeSplit[0].trim()), Integer.parseInt(activeSplit[2].trim())};
-                    //pollID = Integer.parseInt(activeSplit[0].trim());
-                    //numOptions = Integer.parseInt(activeSplit[2].trim());
-                    Log.w("pollID","" + retval[0]);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.e("Error: ", error.getMessage());
-            }
-        });
-        requestQueue.add(jsonRequest);
-        return retval;
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

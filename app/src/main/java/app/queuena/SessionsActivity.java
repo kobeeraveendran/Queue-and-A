@@ -149,46 +149,7 @@ public class SessionsActivity extends AppCompatActivity {
         activeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //sessionGlobal.set(3,activeSessions.get(position)[0]);
-                /*
-                if(emptyFlag) {
-                    isEmptyQ();
-                }
-                */
-                // check if first question
-                // create firebase child
 
-                /*
-                if(emptyFlag) {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put(activeSessions.get(position)[0], "");
-                    root.updateChildren(map);
-
-                    emptyFlag = false;
-
-
-
-                    root.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            Set<String> set = new HashSet<String>();
-                            Iterator i = dataSnapshot.getChildren().iterator();
-
-                            while (i.hasNext()) {
-                                set.add(((DataSnapshot) i.next()).getKey());
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                }
-                */
 
                 Intent goToQuestions = new Intent(SessionsActivity.this, Queue.class);
                 sessionGlobal.set(3, activeSessions.get(position)[0]);
@@ -216,9 +177,7 @@ public class SessionsActivity extends AppCompatActivity {
         archivedListVIew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent goToQuestions = new Intent(SessionsActivity.this, Queue.class);
-                // send info in intent
-                startActivity(goToQuestions);
+               //
             }
         });
     }

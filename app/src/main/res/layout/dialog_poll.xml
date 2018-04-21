@@ -15,7 +15,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="46dp"
         android:layout_marginTop="41dp"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="46dp">
 
         <RadioButton
             android:id="@+id/rbA"
@@ -71,5 +73,7 @@
         android:layout_alignBottom="@+id/rgChoices"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="57dp"
-        android:text="Submit" />
+        android:text="Submit"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="57dp" />
 </RelativeLayout>
